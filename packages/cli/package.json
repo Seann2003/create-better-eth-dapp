@@ -1,0 +1,50 @@
+{
+  "name": "@better-eth-dapp/cli",
+  "version": "0.1.0",
+  "description": "A CLI tool for scaffolding Better ETH dApps",
+  "main": "dist/index.js",
+  "bin": {
+    "better-eth-dapp": "./bin/better-eth-dapp.js"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsup",
+    "start": "node dist/index.js",
+    "test": "vitest",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "ethereum",
+    "dapp",
+    "cli",
+    "scaffold",
+    "web3"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@trpc/server": "^10.45.0",
+    "trpc-cli": "^0.6.0",
+    "zod": "^3.22.4",
+    "commander": "^11.1.0",
+    "inquirer": "^9.2.12",
+    "ora": "^7.0.1",
+    "chalk": "^5.3.0",
+    "fs-extra": "^11.1.1",
+    "execa": "^8.0.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.8.0",
+    "tsx": "^4.20.6",
+    "tsup": "^7.2.0",
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.6"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "templates"
+  ]
+}
