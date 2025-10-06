@@ -1,0 +1,1 @@
+// Hardhat feature generator

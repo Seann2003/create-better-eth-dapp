@@ -1,0 +1,1 @@
+// Shadcn/ui integration generator

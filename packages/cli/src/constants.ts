@@ -1,0 +1,15 @@
+export const dependencyVersions = {
+  "ethers": "^5.7.2",
+  "wagmi": "^1.2.4",
+  "viem": "^0.3.11",
+  "react": "^18.2.0",
+  "react-dom": "^18.2.0",
+  "next": "^13.4.4",
+  "typescript": "^5.1.6",
+  "tailwindcss": "^3.4.7",
+  "autoprefixer": "^10.4.14",
+  "postcss": "^8.4.24",
+  "eslint": "^8.40.0",
+  "eslint-config-next": "^13.4.4",
+  "prettier": "^3.0.3",
+};
