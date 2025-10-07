@@ -31,7 +31,17 @@ import { createCli } from 'trpc-cli';
 import { loadCommands } from './utils/loadCommands';
 
 const t = initTRPC.create();
-// Dynamically load files in commands folder
-const router = t.router(await loadCommands(import.meta.dirname + '/commands'));
 
-createCli({ router }).run();
+async function main() {
+  const rawCommands = await loadCommands(import.meta.dirname + '/commands');
+
+  const commandEntries = Object.entries(rawCommands).map(([name, cmd]) => {
+    return [name, t.procedure.input(cmd.input).query(cmd.resolve)];
+  });
+
+  const router = t.router(Object.fromEntries(commandEntries));
+
+  createCli({ router }).run();
+}
+
+main();
