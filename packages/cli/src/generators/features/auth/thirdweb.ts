@@ -1,51 +1,17 @@
 import path from 'path';
-import fs from 'fs-extra';
-import { execa } from 'execa';
-import Handlebars from 'handlebars';
-import { dependencyVersions } from '../../../constants';
+import { renderTemplates } from '../../../utils/renderTemplates';
 
-export async function generateThirdweb(projectDir: string) {
-  console.log('Setting up Thirdweb authentication...');
-
-  const templateDir = path.resolve(
-    __dirname,
-    '../../../templates/auth/thirdweb'
+export async function generateThirdweb(projectName: string) {
+  const templateDir = path.resolve('templates/auth/thirdweb');
+  const targetDir = path.resolve(
+    process.cwd(),
+    projectName,
+    'src/components/auth'
   );
-  const destDir = path.join(projectDir, 'src/components/auth');
 
-  await fs.ensureDir(destDir);
-
-  const files = await fs.readdir(templateDir);
-
-  for (const file of files) {
-    if (file.endsWith('.hbs')) {
-      const srcPath = path.join(templateDir, file);
-      const destPath = path.join(destDir, file.replace(/\.hbs$/, ''));
-
-      const template = await fs.readFile(srcPath, 'utf-8');
-      const compiled = Handlebars.compile(template);
-      const result = compiled({});
-
-      await fs.writeFile(destPath, result, 'utf-8');
-    }
-  }
-
-  // Update dependencies
-  const pkgJsonPath = path.join(projectDir, 'package.json');
-  const pkg = await fs.readJson(pkgJsonPath);
-
-  pkg.dependencies = {
-    ...pkg.dependencies,
-    dependencyVersions,
-  };
-
-  await fs.writeJson(pkgJsonPath, pkg, { spaces: 2 });
-
-  try {
-    await execa('bun', ['install'], { cwd: projectDir });
-  } catch {
-    console.warn('bun install failed; please run it manually.');
-  }
-
-  console.log('Thirdweb setup complete!');
+  await renderTemplates({
+    from: templateDir,
+    to: targetDir,
+    context: { projectName },
+  });
 }

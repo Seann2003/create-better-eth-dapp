@@ -1,7 +1,14 @@
-'use client'; import { ThirdwebProvider } from "thirdweb/react"; import {
-createConfig } from "thirdweb"; import { sepolia } from "thirdweb/chains";
-export function ThirdwebAuthProvider({ children }: { children: React.ReactNode
-}) { const config = createConfig({ clientId:
-process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID!, chains: [sepolia], }); return (<ThirdwebProvider
-  config='{config}'
->{children}</ThirdwebProvider>); }
+'use client';
+
+import { ThirdwebProvider } from "thirdweb/react";
+import { createConfig } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+
+export function ThirdwebAuthProvider({ children }: { children: React.ReactNode }) {
+  const config = createConfig({
+    clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID!,
+    chains: [sepolia],
+  });
+
+  return <ThirdwebProvider config={config}>{children}</ThirdwebProvider>;
+}

@@ -18,7 +18,7 @@ export const schema = z.object({
 export async function run(input: z.infer<typeof schema>) {
   const { projectName, auth, client, contract, indexer } = input;
 
-  console.log(`\n🚀 Scaffolding ${projectName}...\n`);
+  console.log(`\n Scaffolding ${projectName}...\n`);
 
   if (client) await generateClient(projectName, client);
   if (contract) await generateContract(projectName, contract);

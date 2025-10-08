@@ -1,55 +1,75 @@
+// src/index.ts
 import { Command } from 'commander';
-import { z } from 'zod';
+import { fileURLToPath } from 'url';
+import path from 'path';
 import { loadCommands } from './utils/loadCommands';
 
-const program = new Command();
-
-program
-  .name('better-eth-dapp')
-  .description('Create better Ethereum dapps')
-  .version('0.1.0');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function main() {
-  const commands = await loadCommands(import.meta.dirname + '/commands');
+  const program = new Command();
 
-  for (const [name, { schema, run }] of commands) {
-    const cmd = program.command(name);
+  program
+    .name('better-eth-dapp')
+    .description('Create better ETH dapps')
+    .version('0.1.0');
 
-    // Parse description from Zod schema
-    const shape = schema._def.shape();
-    const keys = Object.keys(shape);
+  const commandsDir = path.join(__dirname, 'commands');
+  const commands = await loadCommands(commandsDir);
 
-    let projectArgAdded = false;
-
-    for (const key of keys) {
-      const def = shape[key];
-      const desc = def.description || key;
-      const type = def._def.typeName;
-
-      // if it's projectName, treat as argument
-      if (key === 'projectName') {
-        cmd.argument(`<${key}>`, desc);
-        projectArgAdded = true;
-      } else {
-        cmd.option(`--${key} <${key}>`, desc);
-      }
+  for (const [name, mod] of Object.entries(commands)) {
+    const { schema, run } = mod;
+    if (!schema || !run) {
+      console.warn(`⚠️ Skipping ${name}.ts: missing schema or run()`);
+      continue;
     }
 
-    cmd.action(async (...args) => {
-      const options = args.at(-1);
-      const input = {
-        ...options,
-        ...(projectArgAdded ? { projectName: args[0] } : {}),
-      };
-      const parsed = schema.parse(input);
-      await run(parsed);
+    const cmd = new Command(name)
+      .description(`Run the ${name} command`)
+      .allowUnknownOption(false);
+
+    // Add arguments and options from zod schema
+    const shape =
+      typeof schema._def?.shape === 'function'
+        ? schema._def.shape()
+        : schema._def?.shape || {};
+
+    if ('projectName' in shape) {
+      cmd.argument(
+        '<projectName>',
+        shape.projectName.description || 'Project name'
+      );
+    }
+
+    for (const key of Object.keys(shape)) {
+      if (key === 'projectName') continue;
+      const desc = shape[key]?.description || key;
+      cmd.option(`--${key} <${key}>`, desc);
+    }
+
+    cmd.action(async (projectNameArg: string, options: Record<string, any>) => {
+      const input: Record<string, any> = { ...options };
+
+      if (projectNameArg && 'projectName' in shape) {
+        input.projectName = projectNameArg;
+      }
+
+      try {
+        const parsed = await schema.parseAsync(input);
+        await run(parsed);
+      } catch (err: any) {
+        console.error('❌ Error:', err.message);
+      }
     });
+
+    program.addCommand(cmd);
   }
 
-  program.parse();
+  program.parse(process.argv);
 }
 
-main().catch((e) => {
-  console.error('CLI error:', e);
+main().catch((err) => {
+  console.error('❌ CLI init failed:', err);
   process.exit(1);
 });

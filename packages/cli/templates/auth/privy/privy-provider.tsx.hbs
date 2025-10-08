@@ -6,7 +6,7 @@ export function PrivyProvider({ children }: { children: React.ReactNode }) {
   return (
     <PrivyProvider
       appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
-      config={{
+      config={
         appearance: {
           theme: "light",
           accentColor: "#3b82f6",
@@ -14,7 +14,7 @@ export function PrivyProvider({ children }: { children: React.ReactNode }) {
         embeddedWallets: {
           createOnLogin: "users-without-wallets",
         },
-      }}
+      }
     >
       {children}
     </PrivyProvider>
