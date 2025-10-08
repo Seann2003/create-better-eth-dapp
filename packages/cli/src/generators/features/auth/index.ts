@@ -1,5 +1,6 @@
+import path from 'path';
 import { generatePrivy } from './privy';
-import { generateThirdWeb } from './thirdweb';
+import { generateThirdweb } from './thirdweb';
 
 export async function generateAuth(
   projectPath: string,
@@ -9,7 +10,7 @@ export async function generateAuth(
     case 'privy':
       return generatePrivy(projectPath);
     case 'thirdweb':
-      return generateThirdWeb(projectPath);
+      return generateThirdweb(projectPath);
     default:
       throw new Error(`Unknown authenticator: ${auth}`);
   }

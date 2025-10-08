@@ -1,0 +1,5 @@
+'use client'; import { useActiveAccount, useConnectModal, useDisconnect } from
+"thirdweb/react"; export function useAuth() { const account =
+useActiveAccount(); const { connect } = useConnectModal(); const { disconnect }
+= useDisconnect(); return { user: account, login: connect, logout: disconnect,
+isAuthenticated: !!account, }; }
