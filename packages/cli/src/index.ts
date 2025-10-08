@@ -1,47 +1,55 @@
-import { initTRPC } from '@trpc/server';
-import { createCli } from 'trpc-cli';
-
-// const t = initTRPC.create();
-
-// const router = t.router({
-//   init: t.procedure
-//     .input(
-//       z.tuple([
-//         ProjectNameSchema.optional().default("."),
-//         z.object({
-//           auth: AuthSchema.optional(),
-//           client: ClientSchema.optional(),
-//           contract: ContractSchema.optional(),
-//           indexer: IndexerSchema.optional(),
-//         }),
-//       ])
-//     )
-//     .query(async ({ input }) => {
-//       const [projectName, options] = input;
-//       const combinedInput = {
-//         projectName,
-//         ...options,
-//       };
-//       console.log("Initializing project with options:", combinedInput);
-//     }),
-// });
-
-// createCli({ router }).run();
-
+import { Command } from 'commander';
+import { z } from 'zod';
 import { loadCommands } from './utils/loadCommands';
 
-const t = initTRPC.create();
+const program = new Command();
+
+program
+  .name('better-eth-dapp')
+  .description('Create better Ethereum dapps')
+  .version('0.1.0');
 
 async function main() {
-  const rawCommands = await loadCommands(import.meta.dirname + '/commands');
+  const commands = await loadCommands(import.meta.dirname + '/commands');
 
-  const commandEntries = Object.entries(rawCommands).map(([name, cmd]) => {
-    return [name, t.procedure.input(cmd.input).query(cmd.resolve)];
-  });
+  for (const [name, { schema, run }] of commands) {
+    const cmd = program.command(name);
 
-  const router = t.router(Object.fromEntries(commandEntries));
+    // Parse description from Zod schema
+    const shape = schema._def.shape();
+    const keys = Object.keys(shape);
 
-  createCli({ router }).run();
+    let projectArgAdded = false;
+
+    for (const key of keys) {
+      const def = shape[key];
+      const desc = def.description || key;
+      const type = def._def.typeName;
+
+      // if it's projectName, treat as argument
+      if (key === 'projectName') {
+        cmd.argument(`<${key}>`, desc);
+        projectArgAdded = true;
+      } else {
+        cmd.option(`--${key} <${key}>`, desc);
+      }
+    }
+
+    cmd.action(async (...args) => {
+      const options = args.at(-1);
+      const input = {
+        ...options,
+        ...(projectArgAdded ? { projectName: args[0] } : {}),
+      };
+      const parsed = schema.parse(input);
+      await run(parsed);
+    });
+  }
+
+  program.parse();
 }
 
-main();
+main().catch((e) => {
+  console.error('CLI error:', e);
+  process.exit(1);
+});

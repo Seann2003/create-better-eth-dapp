@@ -1,1 +1,2 @@
-// CLI entry point with shebang and argument parsing
+#!/usr/bin/env bun
+import '../src/index';

@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import { execa } from 'execa';
 import Handlebars from 'handlebars';
+import { dependencyVersions } from '../../../constants';
 
 export async function generateThirdweb(projectDir: string) {
   console.log('Setting up Thirdweb authentication...');
@@ -35,7 +36,7 @@ export async function generateThirdweb(projectDir: string) {
 
   pkg.dependencies = {
     ...pkg.dependencies,
-    thirdweb: '^5.0.0',
+    dependencyVersions,
   };
 
   await fs.writeJson(pkgJsonPath, pkg, { spaces: 2 });

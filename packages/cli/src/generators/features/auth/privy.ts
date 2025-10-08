@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import { execa } from 'execa';
 import Handlebars from 'handlebars';
+import { dependencyVersions } from '../../../constants';
 
 export async function generatePrivy(projectDir: string) {
   console.log('Setting up Privy authentication...');
@@ -32,7 +33,7 @@ export async function generatePrivy(projectDir: string) {
 
   pkg.dependencies = {
     ...pkg.dependencies,
-    '@privy-io/react-auth': '^1.64.0',
+    dependencyVersions,
   };
 
   await fs.writeJson(pkgJsonPath, pkg, { spaces: 2 });
