@@ -21,8 +21,10 @@ export async function generateNext(projectName: string, auth?: string) {
     context: { projectName, auth },
   });
 
-  console.log('Installing dependencies...');
-  await run('bun add next react react-dom typescript', { cwd: targetDir });
-
-  console.log('Next.js frontend generated successfully.');
+  try {
+    await run('bun install', { cwd: targetDir });
+    console.log('Next.js setup complete');
+  } catch (err: any) {
+    console.warn('Failed to auto-install dependencies:', err.message);
+  }
 }
