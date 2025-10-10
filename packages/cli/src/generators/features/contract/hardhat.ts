@@ -12,27 +12,19 @@ export async function generateHardhat(projectName: string) {
   console.log(`Setting up Hardhat in ${targetDir}`);
   fs.mkdirSync(targetDir, { recursive: true });
 
+  const templateDir = path.resolve('templates/contract/hardhat');
+  await renderTemplates({
+    from: templateDir,
+    to: targetDir,
+    context: { projectName },
+  });
+
   try {
-    console.log('Running Hardhat init ...');
-    await run('npx hardhat --ts --force', { cwd: targetDir });
-    console.log('Hardhat project initialized successfully.');
-  } catch (err: any) {
-    console.warn('Hardhat init failed, falling back to template:', err.message);
-
-    const templateDir = path.resolve('templates/contract/hardhat');
-    await renderTemplates({
-      from: templateDir,
-      to: targetDir,
-      context: { projectName },
-    });
-
-    try {
-      console.log('Installing dependencies...');
-      await run('npm install', { cwd: targetDir });
-      console.log('Dependencies installed successfully.');
-    } catch (e: any) {
-      console.warn('Failed to install dependencies:', e.message);
-      console.warn('You may need to manually run `npm install` later.');
-    }
+    console.log('Installing dependencies...');
+    await run('bun install', { cwd: targetDir });
+    console.log('Dependencies installed successfully.');
+  } catch (e: any) {
+    console.warn('Failed to install dependencies:', e.message);
+    console.warn('You may need to manually run `bun install` later.');
   }
 }
