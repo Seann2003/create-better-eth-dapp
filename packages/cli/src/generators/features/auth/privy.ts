@@ -8,9 +8,7 @@ export async function generatePrivy(projectName: string) {
     projectName,
     'src/components/auth'
   );
-  console.log('CALLING renderTemplates NOW');
-  console.log(' cwd:', process.cwd());
-  console.log(' __dirname:', __dirname);
+
   await renderTemplates({
     from: templateDir,
     to: targetDir,
