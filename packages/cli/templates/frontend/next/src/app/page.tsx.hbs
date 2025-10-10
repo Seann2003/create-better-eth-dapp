@@ -1,4 +1,4 @@
-"use client"
+{{!-- "use client"
 {{#if (eq backend "convex")}}
 import { useQuery } from "convex/react";
 import { api } from "@{{projectName}}/backend/convex/_generated/api";
@@ -75,5 +75,33 @@ export default function Home() {
         </section>
       </div>
     </div>
+  );
+} --}}
+
+'use client';
+import React from 'react';
+import { usePrivy, useWallets } from '{{#if (eq auth "privy")}}@privy-io/react-auth{{else}}@thirdweb-dev/react{{/if}}';
+
+export default function Page() {
+  {{#if (eq auth "privy")}}
+  const { ready, authenticated, login, logout } = usePrivy();
+  {{else}}
+  const { connect, disconnect, address } = useWallets();
+  {{/if}}
+
+  return (
+    <main className="p-6">
+      <h1 className="text-xl font-bold">Hello {{auth}}!</h1>
+      {{#if (eq auth "privy")}}
+      {ready && !authenticated && <button onClick={login}>Login</button>}
+      {authenticated && <button onClick={logout}>Logout</button>}
+      {{else}}
+      {!address ? (
+        <button onClick={connect}>Connect Wallet</button>
+      ) : (
+        <button onClick={disconnect}>Disconnect</button>
+      )}
+      {{/if}}
+    </main>
   );
 }

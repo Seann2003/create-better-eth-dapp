@@ -4,6 +4,7 @@ import { generateContract } from '../generators/features/contract';
 import { generateAuth } from '../generators/features/auth';
 import { generateIndexer } from '../generators/features/indexer';
 import { generateBunfig } from '../generators/features/config';
+import { generateNext } from '../generators/integrations/next';
 
 export const schema = z.object({
   projectName: z.string().describe('Name of the project').default('.'),
@@ -21,12 +22,15 @@ export async function run(input: z.infer<typeof schema>) {
 
   console.log(`\n Scaffolding ${projectName}...\n`);
 
+  // Bunfig for centralized node_modules
+  generateBunfig(projectName);
+
   if (client) await generateClient(projectName, client);
   if (contract) await generateContract(projectName, contract);
   if (auth) await generateAuth(projectName, auth);
   if (indexer) await generateIndexer(projectName, indexer);
-  // Bunfig for centralized node_modules
-  generateBunfig(projectName);
+
+  generateNext(projectName, auth);
 
   console.log('\nProject setup complete!\n');
 }

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "../index.css";
-{{#if (eq auth "clerk")}}{{#if (eq backend "convex")}}import { ClerkProvider } from "@clerk/nextjs";
 {{/if}}{{/if}}import Providers from "@/components/providers";
-import Header from "@/components/header";
+import './globals.css';
+import React from 'react';
+import {{#if (eq auth 'privy')}}CustomPrivyProvider{{/if}}{{#if (eq auth 'thirdweb')}}ThirdwebAuthProvider{{/if}} from '@/components/auth/{{#if (eq auth 'privy')}}privy-provider{{/if}}{{#if (eq auth 'thirdweb')}}thirdweb-provider{{/if}}';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,16 +32,14 @@ export default function RootLayout({
 			>
 				{{#if (and (eq auth "clerk") (eq backend "convex"))}}<ClerkProvider>
 					<Providers>
-						<div className="grid grid-rows-[auto_1fr] h-svh">
-							<Header />
-							{children}
-						</div>
+					<{{#if (eq auth 'privy')}}PrivyAuthProvider{{/if}}{{#if (eq auth 'thirdweb')}}ThirdwebAuthProvider{{/if}}>
+					{children}
+					</{{#if (eq auth 'privy')}}PrivyAuthProvider{{/if}}{{#if (eq auth 'thirdweb')}}ThirdwebAuthProvider{{/if}}>
 					</Providers>
 				</ClerkProvider>{{else}}<Providers>
-					<div className="grid grid-rows-[auto_1fr] h-svh">
-						<Header />
-						{children}
-					</div>
+					<{{#if (eq auth 'privy')}}PrivyAuthProvider{{/if}}{{#if (eq auth 'thirdweb')}}ThirdwebAuthProvider{{/if}}>
+					{children}
+					</{{#if (eq auth 'privy')}}PrivyAuthProvider{{/if}}{{#if (eq auth 'thirdweb')}}ThirdwebAuthProvider{{/if}}>
 				</Providers>{{/if}}
 			</body>
 		</html>
