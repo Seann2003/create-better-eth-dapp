@@ -4,10 +4,22 @@ import { promisify } from 'util';
 import fs from 'fs';
 import path from 'path';
 import { renderTemplates } from '../../utils/renderTemplates';
+import { integrateShadcn } from './shadcn';
 
 const run = promisify(exec);
 
-export async function generateNext(projectName: string, auth?: string) {
+export interface NextOptions {
+  auth?: string;
+  ui?: string;
+  css?: string;
+}
+
+export async function generateNext(
+  projectName: string,
+  options: NextOptions = {}
+) {
+  const { auth, ui, css } = options;
+
   const targetDir = path.resolve(process.cwd(), projectName, 'frontend/next');
   fs.mkdirSync(targetDir, { recursive: true });
 
@@ -18,8 +30,11 @@ export async function generateNext(projectName: string, auth?: string) {
   await renderTemplates({
     from: templateDir,
     to: targetDir,
-    context: { projectName, auth },
+    context: { projectName, auth, ui, css },
   });
+
+  // Apply integrations in order
+  if (ui === 'shadcn') await integrateShadcn(projectName);
 
   try {
     await run('bun install', { cwd: targetDir });

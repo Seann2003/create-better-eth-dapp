@@ -9,18 +9,36 @@ import { integrateShadcn } from '../generators/integrations/shadcn';
 
 export const schema = z.object({
   projectName: z.string().describe('Name of the project').default('.'),
-  auth: z.enum(['privy', 'thirdweb']).describe('Auth provider').optional(),
-  client: z.enum(['viem', 'wagmi']).describe('Client library').optional(),
+  auth: z
+    .enum(['privy', 'thirdweb'])
+    .describe('Auth provider')
+    .default('privy')
+    .optional(),
+  client: z
+    .enum(['viem', 'wagmi'])
+    .describe('Client library')
+    .default('wagmi')
+    .optional(),
   contract: z
     .enum(['ethers', 'foundry', 'hardhat'])
     .describe('Contract framework')
+    .default('foundry')
     .optional(),
-  indexer: z.enum(['subgraph']).describe('Indexer').optional(),
-  ui: z.enum(['shadcn']).describe('UI framework').optional(),
+  indexer: z
+    .enum(['subgraph'])
+    .describe('Indexer')
+    .default('subgraph')
+    .optional(),
+  frontend: z
+    .enum(['next'])
+    .describe('Frontend framework')
+    .default('next')
+    .optional(),
+  ui: z.enum(['shadcn']).describe('UI framework').default('shadcn').optional(),
 });
 
 export async function run(input: z.infer<typeof schema>) {
-  const { projectName, auth, client, contract, indexer, ui } = input;
+  const { projectName, auth, client, contract, indexer, frontend, ui } = input;
 
   console.log(`\n Scaffolding ${projectName}...\n`);
 
@@ -31,10 +49,7 @@ export async function run(input: z.infer<typeof schema>) {
   if (contract) await generateContract(projectName, contract);
   if (auth) await generateAuth(projectName, auth);
   if (indexer) await generateIndexer(projectName, indexer);
-
-  // Integrations
-  generateNext(projectName, auth);
-  if (ui) await integrateShadcn(projectName);
+  if (frontend) await generateNext(projectName, { auth, ui });
 
   console.log('\nProject setup complete!\n');
 }

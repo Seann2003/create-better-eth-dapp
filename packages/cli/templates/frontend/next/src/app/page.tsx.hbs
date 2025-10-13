@@ -81,6 +81,7 @@ export default function Home() {
 'use client';
 import React from 'react';
 import { usePrivy, useWallets } from '{{#if (eq auth "privy")}}@privy-io/react-auth{{else}}@thirdweb-dev/react{{/if}}';
+{{#if (eq ui "shadcn")}}import { Button } from '@/components/ui/button';{{/if}}
 
 export default function Page() {
   {{#if (eq auth "privy")}}
@@ -92,15 +93,29 @@ export default function Page() {
   return (
     <main className="p-6">
       <h1 className="text-xl font-bold">Hello {{auth}}!</h1>
+
       {{#if (eq auth "privy")}}
-      {ready && !authenticated && <button onClick={login}>Login</button>}
-      {authenticated && <button onClick={logout}>Logout</button>}
+        {{#if (eq ui "shadcn")}}
+          {ready && !authenticated && <Button onClick={login}>Login</Button>}
+          {authenticated && <Button onClick={logout}>Logout</Button>}
+        {{else}}
+          {ready && !authenticated && <button onClick={login}>Login</button>}
+          {authenticated && <button onClick={logout}>Logout</button>}
+        {{/if}}
       {{else}}
-      {!address ? (
-        <button onClick={connect}>Connect Wallet</button>
-      ) : (
-        <button onClick={disconnect}>Disconnect</button>
-      )}
+        {{#if (eq ui "shadcn")}}
+          {!address ? (
+            <Button onClick={connect}>Connect Wallet</Button>
+          ) : (
+            <Button onClick={disconnect}>Disconnect</Button>
+          )}
+        {{else}}
+          {!address ? (
+            <button onClick={connect}>Connect Wallet</button>
+          ) : (
+            <button onClick={disconnect}>Disconnect</button>
+          )}
+        {{/if}}
       {{/if}}
     </main>
   );
