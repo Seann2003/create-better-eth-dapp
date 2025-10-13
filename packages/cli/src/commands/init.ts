@@ -49,7 +49,7 @@ export async function run(input: z.infer<typeof schema>) {
   if (contract) await generateContract(projectName, contract);
   if (auth) await generateAuth(projectName, auth);
   if (indexer) await generateIndexer(projectName, indexer);
-  if (frontend) await generateNext(projectName, { auth, ui });
+  if (frontend) await generateNext(projectName, { auth, client, ui });
 
   console.log('\nProject setup complete!\n');
 }

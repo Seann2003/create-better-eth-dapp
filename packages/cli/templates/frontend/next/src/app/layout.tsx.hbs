@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-{{/if}}{{/if}}import Providers from "@/components/providers";
+import Providers from "@/components/providers";
 import './globals.css';
 import React from 'react';
-import {{#if (eq auth 'privy')}}CustomPrivyProvider{{/if}}{{#if (eq auth 'thirdweb')}}ThirdwebAuthProvider{{/if}} from '@/components/auth/{{#if (eq auth 'privy')}}privy-provider{{/if}}{{#if (eq auth 'thirdweb')}}thirdweb-provider{{/if}}';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,23 +24,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  	return (
-		<html lang="en" suppressHydrationWarning>
-			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-			>
-				{{#if (and (eq auth "clerk") (eq backend "convex"))}}<ClerkProvider>
-					<Providers>
-					<{{#if (eq auth 'privy')}}PrivyAuthProvider{{/if}}{{#if (eq auth 'thirdweb')}}ThirdwebAuthProvider{{/if}}>
-					{children}
-					</{{#if (eq auth 'privy')}}PrivyAuthProvider{{/if}}{{#if (eq auth 'thirdweb')}}ThirdwebAuthProvider{{/if}}>
-					</Providers>
-				</ClerkProvider>{{else}}<Providers>
-					<{{#if (eq auth 'privy')}}PrivyAuthProvider{{/if}}{{#if (eq auth 'thirdweb')}}ThirdwebAuthProvider{{/if}}>
-					{children}
-					</{{#if (eq auth 'privy')}}PrivyAuthProvider{{/if}}{{#if (eq auth 'thirdweb')}}ThirdwebAuthProvider{{/if}}>
-				</Providers>{{/if}}
-			</body>
-		</html>
-	);
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <Providers>
+            {children}
+        </Providers>
+      </body>
+    </html>
+  );
 }

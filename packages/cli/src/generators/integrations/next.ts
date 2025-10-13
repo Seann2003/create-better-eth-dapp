@@ -10,6 +10,7 @@ const run = promisify(exec);
 
 export interface NextOptions {
   auth?: string;
+  client?: string;
   ui?: string;
   css?: string;
 }
@@ -18,7 +19,7 @@ export async function generateNext(
   projectName: string,
   options: NextOptions = {}
 ) {
-  const { auth, ui, css } = options;
+  const { auth, client, ui, css } = options;
 
   const targetDir = path.resolve(process.cwd(), projectName, 'frontend/next');
   fs.mkdirSync(targetDir, { recursive: true });
@@ -30,7 +31,7 @@ export async function generateNext(
   await renderTemplates({
     from: templateDir,
     to: targetDir,
-    context: { projectName, auth, ui, css },
+    context: { projectName, auth, client, ui, css },
   });
 
   // Apply integrations in order

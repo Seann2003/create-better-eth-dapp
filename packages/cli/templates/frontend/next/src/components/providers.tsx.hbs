@@ -1,40 +1,24 @@
 "use client";
 
-{{#if (eq backend "convex")}}
-{{#if (eq auth "clerk")}}
-import { useAuth } from "@clerk/nextjs";
-import { ConvexReactClient } from "convex/react";
-import { ConvexProviderWithClerk } from "convex/react-clerk";
-{{else if (eq auth "better-auth")}}
-import { ConvexProvider, ConvexReactClient } from "convex/react";
-import { ConvexBetterAuthProvider } from "@convex-dev/better-auth/react";
-import { authClient } from "@/lib/auth-client";
-{{else}}
-import { ConvexProvider, ConvexReactClient } from "convex/react";
-{{/if}}
-{{else}}
-{{#unless (eq api "none")}}
-import { QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-{{#if (eq api "orpc")}}
-import { queryClient } from "@/utils/orpc";
-{{/if}}
-{{#if (eq api "trpc")}}
-import { queryClient } from "@/utils/trpc";
-{{/if}}
-{{/unless}}
-{{/if}}
+import React from "react";
 import { ThemeProvider } from "./theme-provider";
+{{#if (eq auth 'privy')}}import CustomPrivyProvider from '@/components/auth/privy-provider';{{/if}}
+{{#if (eq auth 'thirdweb')}}import ThirdwebAuthProvider from '@/components/auth/thirdweb-provider';{{/if}}
+{{#if (eq ui 'shadcn')}}
 import { Toaster } from "./ui/sonner";
+{{/if}}
+{{#if (eq client 'wagmi')}}
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiProvider } from "wagmi";
+import { config } from "@/lib/wagmi/config";
 
-{{#if (eq backend "convex")}}
-const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+const queryClient = new QueryClient();
 {{/if}}
 
 export default function Providers({
-  children
+  children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <ThemeProvider
@@ -43,34 +27,25 @@ export default function Providers({
       enableSystem
       disableTransitionOnChange
     >
-      {{#if (eq backend "convex")}}
-      {{#if (eq auth "clerk")}}
-      <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        {children}
-      </ConvexProviderWithClerk>
-      {{else if (eq auth "better-auth")}}
-      <ConvexBetterAuthProvider client={convex} authClient={authClient}>
-        {children}
-      </ConvexBetterAuthProvider>
-      {{else}}
-      <ConvexProvider client={convex}>{children}</ConvexProvider>
-      {{/if}}
-      {{else}}
-      {{#unless (eq api "none")}}
-      <QueryClientProvider client={queryClient}>
-        {{#if (eq api "orpc")}}
-        {children}
-        {{/if}}
-        {{#if (eq api "trpc")}}
-        {children}
-        {{/if}}
-        <ReactQueryDevtools />
-      </QueryClientProvider>
+      {{#if (eq auth 'privy')}}<CustomPrivyProvider>{{/if}}
+      {{#if (eq auth 'thirdweb')}}<ThirdwebAuthProvider>{{/if}}
+
+      {{#if (eq client 'wagmi')}}
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </WagmiProvider>
       {{else}}
       {children}
-      {{/unless}}
       {{/if}}
+
+      {{#if (eq auth 'privy')}}</CustomPrivyProvider>{{/if}}
+      {{#if (eq auth 'thirdweb')}}</ThirdwebAuthProvider>{{/if}}
+
+      {{#if (eq ui 'shadcn')}}
       <Toaster richColors />
+      {{/if}}
     </ThemeProvider>
   );
 }
