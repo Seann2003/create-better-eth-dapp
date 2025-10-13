@@ -2,9 +2,12 @@ import fs from 'fs';
 import path from 'path';
 
 export async function generateBunfig(projectName: string) {
-  const filePath = path.join(process.cwd(), projectName, 'bunfig.toml');
+  const projectPath = path.join(process.cwd(), projectName);
+  const filePath = path.join(projectPath, 'bunfig.toml');
 
-  // only write if it doesn't exist
+  // ensure the directory exists
+  fs.mkdirSync(projectPath, { recursive: true });
+
   if (!fs.existsSync(filePath)) {
     const content = `
 name = "${projectName}"

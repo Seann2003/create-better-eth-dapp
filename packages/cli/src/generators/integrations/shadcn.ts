@@ -4,7 +4,7 @@ import { renderTemplates } from '../../utils/renderTemplates';
 
 export async function integrateShadcn(projectName: string) {
   const targetDir = path.resolve(process.cwd(), projectName, 'frontend');
-  const templateDir = path.resolve('templates/integrations/shadcn');
+  const templateDir = path.resolve('templates/integration/shadcn');
 
   console.log('Adding ShadCN UI components...');
 

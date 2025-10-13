@@ -24,8 +24,38 @@ export async function renderTemplates({
 
       if (entry.name.endsWith('.hbs')) {
         const template = await fs.readFile(srcPath, 'utf8');
+
+        // Register helpers
+        Handlebars.registerHelper('raw', function (options) {
+          return options.fn();
+        });
+
+        Handlebars.registerHelper('eq', function (a, b) {
+          return a === b;
+        });
+
+        Handlebars.registerHelper('and', function (a, b) {
+          return a && b;
+        });
+
+        Handlebars.registerHelper('or', function (a, b) {
+          return a || b;
+        });
+
         const compiled = Handlebars.compile(template);
-        const output = compiled(context);
+
+        const privyConfig = `{{
+          appearance: {
+            theme: "light",
+            accentColor: "#3b82f6",
+          },
+          embeddedWallets: {
+            ethereum: { createOnLogin: "users-without-wallets" },
+            solana: { createOnLogin: "users-without-wallets" },
+          },
+      }}`;
+
+        const output = compiled({ ...context, privyConfig });
         await fs.writeFile(destPath, output, 'utf8');
         console.log(`📝 Created ${path.relative(process.cwd(), destPath)}`);
       } else {

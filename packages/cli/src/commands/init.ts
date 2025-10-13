@@ -5,36 +5,25 @@ import { generateAuth } from '../generators/features/auth';
 import { generateIndexer } from '../generators/features/indexer';
 import { generateBunfig } from '../generators/features/config';
 import { generateNext } from '../generators/integrations/next';
-import { integrateShadcn } from '../generators/integrations/shadcn';
 
 export const schema = z.object({
   projectName: z.string().describe('Name of the project').default('.'),
   auth: z
     .enum(['privy', 'thirdweb'])
     .describe('Auth provider')
-    .default('privy')
-    .optional(),
-  client: z
-    .enum(['viem', 'wagmi'])
-    .describe('Client library')
-    .default('wagmi')
-    .optional(),
+    .default('privy'),
+  client: z.enum(['viem', 'wagmi']).describe('Client library').default('wagmi'),
   contract: z
     .enum(['ethers', 'foundry', 'hardhat'])
     .describe('Contract framework')
-    .default('foundry')
-    .optional(),
+    .default('foundry'),
   indexer: z
     .enum(['subgraph'])
     .describe('Indexer')
     .default('subgraph')
     .optional(),
-  frontend: z
-    .enum(['next'])
-    .describe('Frontend framework')
-    .default('next')
-    .optional(),
-  ui: z.enum(['shadcn']).describe('UI framework').default('shadcn').optional(),
+  frontend: z.enum(['next']).describe('Frontend framework').default('next'),
+  ui: z.enum(['shadcn']).describe('UI framework').default('shadcn'),
 });
 
 export async function run(input: z.infer<typeof schema>) {
