@@ -10,10 +10,21 @@ export async function generatePrivy(projectName: string) {
   const targetDir = path.join(frontendDir, 'src/components/auth');
   const templateDir = path.resolve('templates/auth/privy');
 
+  const privyConfig = `\{\{
+    appearance: {
+      theme: "light",
+      accentColor: "#3b82f6",
+    },
+    embeddedWallets: {
+      ethereum: { createOnLogin: "users-without-wallets" },
+      solana: { createOnLogin: "users-without-wallets" },
+    },
+  \}\}`;
+
   await renderTemplates({
     from: templateDir,
     to: targetDir,
-    context: { projectName },
+    context: { projectName, privyConfig },
   });
 
   console.log('Installing Privy dependencies...');
