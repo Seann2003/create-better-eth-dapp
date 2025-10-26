@@ -12,7 +12,7 @@ export const schema = z.object({
     .enum(['privy', 'thirdweb'])
     .describe('Auth provider')
     .default('privy'),
-  client: z.enum(['viem', 'wagmi']).describe('Client library').default('wagmi'),
+  client: z.enum(['viem', 'wagmi', 'ethers']).describe('Client library').default('wagmi'),
   contract: z
     .enum(['ethers', 'foundry', 'hardhat'])
     .describe('Contract framework')

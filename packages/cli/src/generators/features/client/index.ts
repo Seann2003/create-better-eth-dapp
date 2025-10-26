@@ -1,15 +1,18 @@
 import { generateViem } from './viem';
 import { generateWagmi } from './wagmi';
+import { generateEthers } from './ethers';
 
 export async function generateClient(
-  projectPath: string,
-  client: 'viem' | 'wagmi'
+  projectName: string,
+  client: 'viem' | 'wagmi' | 'ethers'
 ) {
   switch (client) {
     case 'viem':
-      return generateViem(projectPath);
+      return generateViem(projectName);
     case 'wagmi':
-      return generateWagmi(projectPath);
+      return generateWagmi(projectName);
+    case 'ethers':
+      return generateEthers(projectName);
     default:
       throw new Error(`Unknown frontend client: ${client}`);
   }

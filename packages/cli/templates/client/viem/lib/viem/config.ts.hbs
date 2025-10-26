@@ -1,0 +1,35 @@
+import { createPublicClient, createWalletClient, http, type Address, type Hash } from 'viem';
+import { mainnet, sepolia } from 'viem/chains';
+
+// Chain configurations
+const chains = [mainnet, sepolia] as const;
+
+// Public clients for reading from contracts
+export const publicClients = {
+  mainnet: createPublicClient({
+    chain: mainnet,
+    transport: http(),
+  }),
+  sepolia: createPublicClient({
+    chain: sepolia,
+    transport: http(),
+  }),
+} as const;
+
+// Wallet client configuration (requires browser wallet connection)
+export const createWalletClientConfig = (account: Address) => ({
+  mainnet: createWalletClient({
+    account,
+    chain: mainnet,
+    transport: http(),
+  }),
+  sepolia: createWalletClient({
+    account,
+    chain: sepolia,
+    transport: http(),
+  }),
+});
+
+// Export chain configurations for external use
+export { chains, mainnet, sepolia };
+export type { Address, Hash };

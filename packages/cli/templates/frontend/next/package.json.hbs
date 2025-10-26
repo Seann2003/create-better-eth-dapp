@@ -31,6 +31,9 @@
     "viem": "2.x",
     "@tanstack/react-query": "^5.90.2"
     {{/if}}
+    {{#if (eq client "ethers")}}
+    ,"ethers": "^6.13.0"
+    {{/if}}
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.10",

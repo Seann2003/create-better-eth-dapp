@@ -1,0 +1,78 @@
+import { ethers } from 'ethers';
+
+// Chain configurations
+export const chains = {
+  mainnet: {
+    chainId: 1,
+    name: 'Ethereum Mainnet',
+    rpcUrl: 'https://eth-mainnet.g.alchemy.com/v2/YOUR_API_KEY',
+  },
+  sepolia: {
+    chainId: 11155111,
+    name: 'Sepolia Testnet',
+    rpcUrl: 'https://eth-sepolia.g.alchemy.com/v2/YOUR_API_KEY',
+  },
+} as const;
+
+// Provider factory function
+export function createProvider(chainId: keyof typeof chains) {
+  const chain = chains[chainId];
+  
+  if (typeof window !== 'undefined' && window.ethereum) {
+    // Browser environment with MetaMask
+    return new ethers.BrowserProvider(window.ethereum);
+  } else {
+    // Fallback to JSON-RPC provider
+    return new ethers.JsonRpcProvider(chain.rpcUrl);
+  }
+}
+
+// Signer factory function
+export async function createSigner(provider: ethers.Provider) {
+  if (provider instanceof ethers.BrowserProvider) {
+    return await provider.getSigner();
+  }
+  throw new Error('Signer can only be created from BrowserProvider');
+}
+
+// Contract factory function
+export function createContract(
+  address: string,
+  abi: any[],
+  signerOrProvider: ethers.Signer | ethers.Provider
+) {
+  return new ethers.Contract(address, abi, signerOrProvider);
+}
+
+// Utility functions
+export async function connectWallet() {
+  if (typeof window === 'undefined' || !window.ethereum) {
+    throw new Error('MetaMask is not installed');
+  }
+
+  try {
+    // Request account access
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
+    
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const address = await signer.getAddress();
+    
+    return { provider, signer, address };
+  } catch (error) {
+    throw new Error(`Failed to connect wallet: ${error}`);
+  }
+}
+
+export async function getBalance(address: string, provider: ethers.Provider) {
+  const balance = await provider.getBalance(address);
+  return ethers.formatEther(balance);
+}
+
+export async function getNetwork(provider: ethers.Provider) {
+  return await provider.getNetwork();
+}
+
+// Export types
+export type ChainId = keyof typeof chains;
+export type { ethers };
