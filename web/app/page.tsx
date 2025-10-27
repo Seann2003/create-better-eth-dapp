@@ -9,6 +9,7 @@ import {
   AuthProviders,
   ClientProviders,
   ContractFrameworks,
+  PackageManagers,
 } from "@/data/types";
 
 export default function Home() {
@@ -17,6 +18,8 @@ export default function Home() {
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [selectedContract, setSelectedContract] = useState<any>(null);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const [selectedPackageManager, setSelectedPackageManager] =
+    useState<any>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,9 +42,14 @@ export default function Home() {
   const handleContractUpdate = (contract: any) => {
     setSelectedContract(contract);
   };
+  const handlePackageManagerUpdate = (packageManager: any) => {
+    setSelectedPackageManager(packageManager);
+  };
 
-  const generateCommand = () => {
-    const baseCommand = `$ bun create better-eth-dapp@latest ${projectName}`;
+  const generateCommand = (selectedPackageManager: any) => {
+    const baseCommand = `$ ${
+      selectedPackageManager?.value || "bun"
+    } create better-eth-dapp@latest ${projectName}`;
     const flags = [
       selectedAuth?.value,
       selectedClient?.value,
@@ -89,13 +97,15 @@ export default function Home() {
                 />
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                   <code className="text-xs text-gray-700 font-mono mr-2 mb-2">
-                    {generateCommand()}
+                    {generateCommand(selectedPackageManager)}
                   </code>
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() =>
-                      navigator.clipboard.writeText(generateCommand())
+                      navigator.clipboard.writeText(
+                        generateCommand(selectedPackageManager)
+                      )
                     }
                   >
                     Copy
@@ -169,22 +179,16 @@ export default function Home() {
               selectedValue={selectedClient}
             />
             <Card
-              category="Client Providers"
-              options={ClientProviders}
-              onStackUpdate={handleClientUpdate}
-              selectedValue={selectedClient}
-            />
-            <Card
-              category="Client Providers"
-              options={ClientProviders}
-              onStackUpdate={handleClientUpdate}
-              selectedValue={selectedClient}
-            />
-            <Card
               category="Contract Frameworks"
               options={ContractFrameworks}
               onStackUpdate={handleContractUpdate}
               selectedValue={selectedContract}
+            />
+            <Card
+              category="Package Managers"
+              options={PackageManagers}
+              onStackUpdate={handlePackageManagerUpdate}
+              selectedValue={selectedPackageManager}
             />
           </div>
         </div>

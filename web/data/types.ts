@@ -48,3 +48,24 @@ export const ContractFrameworks = [
     image: "/option/foundry.png",
   },
 ] as const;
+
+export const PackageManagers = [
+  {
+    label: "bun",
+    value: "bun",
+    description: "Fast, modern package manager",
+    image: "/option/bun.png",
+  },
+  {
+    label: "pnpm",
+    value: "pnpm",
+    description: "Fast, modern package manager",
+    image: "/option/pnpm.png",
+  },
+  {
+    label: "npm",
+    value: "npm",
+    description: "Node package manager",
+    image: "/option/npm.png",
+  },
+] as const;
