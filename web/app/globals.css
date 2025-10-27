@@ -1,6 +1,30 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@font-face {
+  font-family: "Anime Ace 2";
+  src: url("/font/animeace2bb_tt/animeace2_reg.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Anime Ace 2";
+  src: url("/font/animeace2bb_tt/animeace2_bld.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Anime Ace 2";
+  src: url("/font/animeace2bb_tt/animeace2_ital.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -36,9 +60,9 @@
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #000000;
   --sidebar-ring: #ff3333;
-  --font-sans: DM Sans, sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: Space Mono, monospace;
+  --font-sans: "Anime Ace 2", sans-serif;
+  --font-serif: "Anime Ace 2", serif;
+  --font-mono: "Anime Ace 2", monospace;
   --radius: 0px;
   --shadow-x: 4px;
   --shadow-y: 4px;
@@ -95,9 +119,9 @@
   --sidebar-accent-foreground: #000000;
   --sidebar-border: #ffffff;
   --sidebar-ring: #ff6666;
-  --font-sans: DM Sans, sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: Space Mono, monospace;
+  --font-sans: "Anime Ace 2", sans-serif;
+  --font-serif: "Anime Ace 2", serif;
+  --font-mono: "Anime Ace 2", monospace;
   --radius: 0px;
   --shadow-x: 4px;
   --shadow-y: 4px;

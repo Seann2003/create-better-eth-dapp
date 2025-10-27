@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Card from "@/components/Card";
+import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import {
@@ -45,20 +46,23 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
-      <div className="container mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex items-center">
-            <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
-              Better Ethereum DApp
-            </h1>
-          </div>
-        </div>
+    <div className="min-h-screen bg-[#f2f2f2] text-gray-900 font-sans">
+      <div className="container mx-auto px-6 py-4">
+        {/* Navbar */}
+        <div className="backdrop-blur sticky flex justify-center items-center top-0 h-10 z-50 w-[calc(100%+2rem)] -mx-4 bg-[#f2f2f2]/80"></div>
+        <Navbar />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1 space-y-6">
-            {/* Project Name */}
+            <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+              <label className="block text-sm font-semibold text-gray-900 uppercase tracking-wide mb-4">
+                Filter options
+              </label>
+              <input
+                className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:ring-2 transition-colors"
+                placeholder="Filter by option"
+              ></input>
+            </div>
             <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
               <div className="space-y-4">
                 <label className="block text-sm font-semibold text-gray-900 uppercase tracking-wide">
@@ -88,7 +92,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Selected Stack */}
             <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
