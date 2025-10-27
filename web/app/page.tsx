@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Card from "@/components/Card";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,17 @@ export default function Home() {
   const [selectedAuth, setSelectedAuth] = useState<any>(null);
   const [selectedClient, setSelectedClient] = useState<any>(null);
   const [selectedContract, setSelectedContract] = useState<any>(null);
+  const [isScrolled, setIsScrolled] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleAuthUpdate = (auth: any) => {
     setSelectedAuth(auth);
@@ -47,9 +58,10 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#f2f2f2] text-gray-900 font-sans">
-      <div className="container mx-auto px-6 py-4">
-        {/* Navbar */}
-        <div className="backdrop-blur sticky flex justify-center items-center top-0 h-10 z-50 w-[calc(100%+2rem)] -mx-4 bg-[#f2f2f2]/80"></div>
+      <div className="container mx-auto px-6">
+        {isScrolled && (
+          <div className="backdrop-blur sticky flex justify-center items-center top-0 h-10 z-50 w-[calc(100%+2rem)] -mx-4 bg-[#f2f2f2]/80"></div>
+        )}
         <Navbar />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -149,6 +161,18 @@ export default function Home() {
               options={AuthProviders}
               onStackUpdate={handleAuthUpdate}
               selectedValue={selectedAuth}
+            />
+            <Card
+              category="Client Providers"
+              options={ClientProviders}
+              onStackUpdate={handleClientUpdate}
+              selectedValue={selectedClient}
+            />
+            <Card
+              category="Client Providers"
+              options={ClientProviders}
+              onStackUpdate={handleClientUpdate}
+              selectedValue={selectedClient}
             />
             <Card
               category="Client Providers"
