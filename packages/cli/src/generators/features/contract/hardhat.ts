@@ -3,10 +3,11 @@ import { promisify } from 'util';
 import path from 'path';
 import fs from 'fs';
 import { renderTemplates } from '../../../utils/renderTemplates';
+import { installDependencies, PackageManager } from '../../../utils/packageManager';
 
 const run = promisify(exec);
 
-export async function generateHardhat(projectName: string) {
+export async function generateHardhat(projectName: string, packageManager: PackageManager) {
   const targetDir = path.resolve(process.cwd(), projectName, 'contracts');
 
   console.log(`Setting up Hardhat in ${targetDir}`);
@@ -19,12 +20,5 @@ export async function generateHardhat(projectName: string) {
     context: { projectName },
   });
 
-  try {
-    console.log('Installing dependencies...');
-    await run('bun install', { cwd: targetDir });
-    console.log('Dependencies installed successfully.');
-  } catch (e: any) {
-    console.warn('Failed to install dependencies:', e.message);
-    console.warn('You may need to manually run `bun install` later.');
-  }
+  await installDependencies(targetDir, packageManager);
 }

@@ -4,10 +4,11 @@ import { promisify } from "util";
 import path from "path";
 import fs from "fs";
 import { renderTemplates } from "../../../utils/renderTemplates";
+import { installPackages, PackageManager } from "../../../utils/packageManager";
 
 const run = promisify(exec);
 
-export async function generateViem(projectName: string) {
+export async function generateViem(projectName: string, packageManager: PackageManager) {
   const frontendDir = path.resolve(process.cwd(), projectName, "frontend");
 
   console.log(`Setting up Viem client in ${frontendDir}`);
@@ -20,12 +21,5 @@ export async function generateViem(projectName: string) {
     context: { projectName },
   });
 
-  try {
-    console.log("Installing viem...");
-    await run("bun add viem", { cwd: frontendDir });
-    console.log("Viem installed successfully.");
-  } catch (e: any) {
-    console.warn("Failed to install viem:", e.message);
-    console.warn("You may need to manually run `bun add viem` later.");
-  }
+  await installPackages(['viem'], frontendDir, packageManager);
 }

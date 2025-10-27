@@ -4,10 +4,11 @@ import { promisify } from "util";
 import path from "path";
 import fs from "fs";
 import { renderTemplates } from "../../../utils/renderTemplates";
+import { installPackages, PackageManager } from "../../../utils/packageManager";
 
 const run = promisify(exec);
 
-export async function generateWagmi(projectName: string) {
+export async function generateWagmi(projectName: string, packageManager: PackageManager) {
   const frontendDir = path.resolve(process.cwd(), projectName, "frontend");
 
   console.log(`Setting up Wagmi client in ${frontendDir}`);
@@ -20,16 +21,7 @@ export async function generateWagmi(projectName: string) {
     context: { projectName },
   });
 
-  try {
-    console.log("Installing wagmi dependencies...");
-    await run("bun add wagmi viem @tanstack/react-query", { cwd: frontendDir });
-    console.log("Wagmi dependencies installed successfully.");
-  } catch (e: any) {
-    console.warn("Failed to install wagmi dependencies:", e.message);
-    console.warn(
-      "You may need to manually run `bun add wagmi viem @tanstack/react-query` later."
-    );
-  }
+  await installPackages(['wagmi', 'viem', '@tanstack/react-query'], frontendDir, packageManager);
 
   console.log("Wagmi client setup complete!");
 }
