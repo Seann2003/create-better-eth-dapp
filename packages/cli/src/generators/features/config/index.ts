@@ -17,7 +17,6 @@ version = "0.1.0"
 members = [
   "contracts",
   "frontend",
-  "indexer"
 ]
 `;
     fs.writeFileSync(filePath, content.trimStart(), 'utf8');
