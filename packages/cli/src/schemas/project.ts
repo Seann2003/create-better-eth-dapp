@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const ProjectNameSchema = z
   .string()
+  .describe('Name of the project')
   .min(1, { message: 'Project name must be at least 1 character long' })
   .max(100, { message: 'Project name must be at most 255 characters long' })
   .regex(/^[a-zA-Z0-9-_]+$/, {
@@ -23,6 +24,7 @@ export const ProjectNameSchema = z
   .refine(
     (name) => ['node_modules', 'favicon.ico', 'README.md'].indexOf(name) === -1,
     'Project name cannot be node_modules, favicon.ico, or README.md'
-  );
+  )
+  .default('myapp');
 
 export type ProjectName = z.infer<typeof ProjectNameSchema>;

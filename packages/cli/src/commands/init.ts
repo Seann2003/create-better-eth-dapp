@@ -1,30 +1,27 @@
-import { z } from "zod";
-import { generateClient } from "../generators/features/client";
-import { generateContract } from "../generators/features/contract";
-import { generateAuth } from "../generators/features/auth";
-import { generateBunfig } from "../generators/features/config";
-import { generateNext } from "../generators/integrations/next";
+import { z } from 'zod';
+import { generateClient } from '../generators/features/client';
+import { generateContract } from '../generators/features/contract';
+import { generateAuth } from '../generators/features/auth';
+import { generateBunfig } from '../generators/features/config';
+import { generateNext } from '../generators/integrations/next';
+import {
+  AuthSchema,
+  ClientSchema,
+  ContractSchema,
+  FrontendSchema,
+  PackageManagerSchema,
+  ProjectNameSchema,
+  UiSchema,
+} from '../types';
 
 export const schema = z.object({
-  projectName: z.string().describe("Name of the project").default("."),
-  auth: z
-    .enum(["privy", "thirdweb"])
-    .describe("Auth provider")
-    .default("privy"),
-  client: z
-    .enum(["viem", "wagmi", "ethers"])
-    .describe("Client library")
-    .default("wagmi"),
-  contract: z
-    .enum(["ethers", "foundry", "hardhat"])
-    .describe("Contract framework")
-    .default("foundry"),
-  frontend: z.enum(["next"]).describe("Frontend framework").default("next"),
-  ui: z.enum(["shadcn"]).describe("UI framework").default("shadcn"),
-  packageManager: z
-    .enum(["bun", "pnpm", "npm", "npx"])
-    .describe("Package manager to use")
-    .default("bun"),
+  projectName: ProjectNameSchema,
+  auth: AuthSchema,
+  client: ClientSchema,
+  contract: ContractSchema,
+  frontend: FrontendSchema,
+  ui: UiSchema,
+  packageManager: PackageManagerSchema,
 });
 
 export async function run(input: z.infer<typeof schema>) {
@@ -34,7 +31,7 @@ export async function run(input: z.infer<typeof schema>) {
   console.log(`\n Scaffolding ${projectName}...\n`);
 
   // Bunfig for centralized node_modules (only for bun)
-  if (packageManager === "bun") {
+  if (packageManager === 'bun') {
     generateBunfig(projectName);
   }
 
@@ -44,5 +41,5 @@ export async function run(input: z.infer<typeof schema>) {
   if (frontend)
     await generateNext(projectName, { auth, client, ui, packageManager });
 
-  console.log("\nProject setup complete!\n");
+  console.log('\nProject setup complete!\n');
 }
