@@ -4,6 +4,7 @@ import fs from 'fs-extra';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { renderTemplates } from '../../../utils/renderTemplates';
+import { CONTRACT_TEMPLATES } from '../../../utils/paths';
 
 const run = promisify(exec);
 
@@ -22,7 +23,7 @@ export async function generateFoundry(projectName: string) {
   } catch (err: any) {
     // Fallback to template if no forge installed
     console.warn('forge init failed, falling back to template:', err.message);
-    const templateDir = path.resolve('templates/contract/foundry');
+    const templateDir = path.join(CONTRACT_TEMPLATES, 'foundry');
     await renderTemplates({
       from: templateDir,
       to: targetDir,

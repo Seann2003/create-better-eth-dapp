@@ -4,7 +4,7 @@
   "description": "A CLI tool for scaffolding Better ETH dApps",
   "main": "dist/index.js",
   "bin": {
-    "better-eth-dapp": "./bin/better-eth-dapp.ts"
+    "create-better-eth-dapp": "./bin/create-better-eth-dapp.ts"
   },
   "scripts": {
     "dev": "tsx src/index.ts",

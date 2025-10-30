@@ -3,13 +3,17 @@ import { promisify } from 'util';
 import { exec } from 'child_process';
 import { renderTemplates } from '../../../utils/renderTemplates';
 import { installPackages, PackageManager } from '../../../utils/packageManager';
+import { AUTH_TEMPLATES } from '../../../utils/paths';
 
 const run = promisify(exec);
 
-export async function generatePrivy(projectName: string, packageManager: PackageManager) {
+export async function generatePrivy(
+  projectName: string,
+  packageManager: PackageManager
+) {
   const frontendDir = path.resolve(process.cwd(), projectName, 'frontend');
   const targetDir = path.join(frontendDir, 'src/components/auth');
-  const templateDir = path.resolve('templates/auth/privy');
+  const templateDir = path.join(AUTH_TEMPLATES, 'privy');
 
   const privyConfig = `\{\{
     appearance: {
