@@ -1,8 +1,12 @@
+import { PackageManager } from '../../../utils/packageManager';
 import { generatePrivy } from './privy';
 import { generateThirdweb } from './thirdweb';
-import { PackageManager } from '../../utils/packageManager';
 
-export async function generateAuth(projectName: string, auth: string, packageManager: PackageManager) {
+export async function generateAuth(
+  projectName: string,
+  auth: string,
+  packageManager: PackageManager
+) {
   switch (auth) {
     case 'privy':
       await generatePrivy(projectName, packageManager);

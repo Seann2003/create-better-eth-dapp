@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 import { Command } from 'commander';
-import { run as init } from '../src/commands/init';
+import { run as init } from '../dist/commands/init.js';
 
 const program = new Command();
 
