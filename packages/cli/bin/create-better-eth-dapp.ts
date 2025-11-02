@@ -1,6 +1,19 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 import { Command } from 'commander';
-import { run as init } from '../dist/commands/init.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
+// Auto-resolve init command (works both in src/ and dist/)
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+let initPath = path.resolve(__dirname, '../commands/init.js');
+
+// Fallback to src/ in dev
+if (!fs.existsSync(initPath)) {
+  initPath = path.resolve(__dirname, '../src/commands/init.ts');
+}
+
+const { run: init } = await import(initPath);
 
 const program = new Command();
 
